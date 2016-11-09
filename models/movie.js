@@ -9,30 +9,74 @@ const limit = 10;
 const offset = 0;
 
 function getAllMovies(req, res, next) {
-// implement get all movies
+  if(!req.query.limit) {
+    req.query.limit = limit;
+  };
+  if(!req.query.offset) {
+    req.query.offset = offset;
+  };
+
+  db.any(`SELECT * FROM movies LIMIT $1 OFFSET $2;`, [req.query.limit, req.query.offset])
+    .then((data) => {
+      res.rows = data;
+      next();
+    })
+    .catch(error => next(error));
 }
 
 function getMovie(req, res, next) {
-// implement get single movie
+  db.one(`SELECT * FROM movies WHERE id=${req.params.id};`)
+    .then((data) => {
+      res.row = data;
+      next();
+    })
+    .catch(error => next(error));
 }
 
 function updateMovie(req, res, next) {
-// implement update
+  // db.one(`
+  //   UPDATE movies
+  //   SET
+  //   WHERE id=${req.params.id};`
+  // )
+  //   .then((data) => {
+  //     res.row = data;
+  //     next();
+  //   })
+  //   .catch(error => next(error));
 }
 
-function deletemovie(req, res, next) {
-// implement delete
+function deleteMovie(req, res, next) {
+  db.one(`DELETE FROM movies WHERE id=${req.params.id};`)
+    .then((data) => {
+      res.row = data;
+      next();
+    })
+    .catch(error => next(error));
 }
 
 // BONUS
 function getAllMoviesWithRatings(req, res, next) {
-
+  db.any (`
+    SELECT movies.id, movies.title, movies.release_date, ratings.rating
+    FROM movies
+    LEFT JOIN ratings
+      ON (movies.id = ratings.movie_id)
+    LIMIT $1
+    OFFSET $2;`
+    , [req.query.limit, req.query.offset]
+    )
+    .then((data) => {
+      res.rows = data;
+      next();
+  })
+  .catch(error => next(error));
 }
 
 module.exports = {
   getAllMovies,
   getMovie,
   updateMovie,
-  deletemovie,
+  deleteMovie,
   getAllMoviesWithRatings
 };

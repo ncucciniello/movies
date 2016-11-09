@@ -7,4 +7,33 @@
   <body>
     <h1>Welcome!</h1>
   </body>
+
+  <script type="text/javascript">
+
+  function showMovies(){
+    fetch(`/api/movies`)
+      .then(r => r.json())
+      .then(data => renderMovies(data))
+      .catch(err => console.log(err));
+    };
+
+    function renderMovies{
+        const body = document.querySelector('body');
+        for (let i = 0; i < data.length; i++) {
+          let containerDiv = document.createElement('div');
+          let id =
+          let title =
+          let release =
+          let url =
+          id.textContent = id:
+          // $title.text(data.items[i].volumeInfo.title);
+          // $description.text(data.items[i].volumeInfo.description);
+          // $book.append($title, $description);
+          // li.appendChild(movie);
+          // movieList.appendChild(li);
+        }
+    }
+  }
+  </script>
+
 </html>
